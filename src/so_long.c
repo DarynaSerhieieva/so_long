@@ -1,7 +1,24 @@
 #include <../mlx_linux/mlx.h>
 #include <libft.h>
+#include <so_long.h>
 
-typedef struct	s_data
+int	main(int argc, char **argv)
+{
+	if (argc != 2)
+		return (0);
+	if (map_render(argv[1]))
+	{
+		ft_printf("The map is correct!\n");
+		return (0);
+	}
+	else
+	{
+		ft_printf("The mape contains an error!\n");
+		return (1);
+	}
+}
+
+/*typedef struct	s_data
 {
 	void	*img;
 	char	*addr;
@@ -34,8 +51,6 @@ int	close(int keycode, t_vars *vars)
 	return (0);
 }
 
-int	main(void)
-{
 	t_vars	mlx;
 	t_data	img;
 	int i = 0;
@@ -44,7 +59,6 @@ int	main(void)
 	mlx.mlx = mlx_init();
 	mlx.win = mlx_new_window(mlx.mlx, 1920, 1080, "Hello world!");
 	img.img = mlx_new_image(mlx.mlx, 1920, 1080);
-	
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
 								&img.endian);
 	while (i != 100)
@@ -60,5 +74,4 @@ int	main(void)
 	}
 	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
 	mlx_hook(mlx.win, 2, 1L<<0, close, &mlx);
-	mlx_loop(mlx.mlx);
-}
+	mlx_loop(mlx.mlx);*/
