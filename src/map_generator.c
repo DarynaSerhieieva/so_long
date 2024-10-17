@@ -1,19 +1,26 @@
 #include <libft.h>
 #include <so_long.h>
 
-int	is_rectangular(t_map *map)
+int	map_clone(t_map *map)
 {
-	if (map->line[map->current_len - 1] == '\n')
+	char	*temp;
+
+	if (!map->map)
 	{
-		if (map->first_len == map->current_len)
-			return (1);
+		map->map = ft_strdup(map->line);
+		if (!map->map)
+			return (0);
 	}
 	else
 	{
-		if (map->first_len == map->current_len + 1)
-			return (1);
+		temp = map->map;
+		map->map = ft_strjoin(temp, map->line);
+		free(temp);
+		if (!map->map)
+			return (0);
 	}
-	return (ft_printf("The map is not rectangular!\n"), 0);
+	ft_printf("My map:\n%s\n", map->map);
+	return (1);
 }
 
 int	check_up_first_last(t_map *map, int ind)
@@ -44,6 +51,8 @@ int	check_all_line(int fd, t_map *map)
 {
 	while (map->line != 0)
 	{
+		if (!map_clone(map))
+			return (0);
 		map->last_line = ft_strdup(map->line);
 		if (!map->last_line)
 			return (0);
@@ -56,12 +65,9 @@ int	check_all_line(int fd, t_map *map)
 			return (0);
 		if (map->line[0] != '1' || map->line[map->current_len - 2] != '1')
 			return (ft_printf("The map does not have walls!\n"), 0);
-		if (ft_strchr(map->line, 'C'))
-			map->coll++;
-		if (ft_strchr(map->line, 'E'))
-			map->exit++;
-		if (ft_strchr(map->line, 'P'))
-			map->pos++;
+		map->coll += count_char(map, 'C');
+		map->exit += count_char(map, 'E');
+		map->pos += count_char(map, 'P');
 		free(map->last_line);
 	}
 	return (1);
@@ -95,7 +101,7 @@ int	map_check_up(int fd)
 	return (1);
 }
 
-int	map_render(const char *link)
+int	map_generator(const char *link)
 {
 	int	fd;
 

@@ -8,6 +8,8 @@ typedef struct s_map
 {
 	char	*line;
 	char	*last_line;
+	char	*map;
+	char	*start;
 	int		pos;
 	int		exit;
 	int		coll;
@@ -21,7 +23,11 @@ typedef struct s_list
 	void	*win;
 }				t_list;
 
-int	map_render(const char *map);
+int	map_generator(const char *map);
 int	main(int argc, char **argv);
+int	is_rectangular(t_map *map);
+int	count_char(t_map *map, char c);
+// int	map_clone(t_map *map);
+// int	check_each_char(char *line, int len);
 
 #endif

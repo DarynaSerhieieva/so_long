@@ -6,7 +6,7 @@ int	main(int argc, char **argv)
 {
 	if (argc != 2)
 		return (0);
-	if (map_render(argv[1]))
+	if (map_generator(argv[1]))
 	{
 		ft_printf("The map is correct!\n");
 		return (0);
