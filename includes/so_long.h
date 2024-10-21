@@ -13,7 +13,6 @@ typedef struct s_map
 	int		pos;
 	int		exit;
 	int		coll;
-	int		first_len;
 	int		current_len;
 	int		cols;
 	int		rows;
@@ -34,6 +33,6 @@ int	main(int argc, char **argv);
 int	is_rectangular(t_map *map);
 int	check_each_char(t_map *map);
 int	map_clone(t_map *map);
-void	dfs(t_map *map, int x, int y)
+void	dfs(t_map *map, int x, int y);
 
 #endif

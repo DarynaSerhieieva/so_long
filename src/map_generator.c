@@ -5,30 +5,42 @@ int	find_a_way(t_map *map)
 {
 	int	x;
 	int	y;
+	int	i;
+
+	i = 0;
 	map->visited = (bool **)malloc(map->rows * sizeof(bool *));
-	for (int i = 0; i < map->rows; i++)
+	if (!map->visited)
+		return (ft_printf("Memory allocation error!\n"), 0);
+
+	while (i < map->rows)
+	{
 		map->visited[i] = (bool *)malloc(map->cols * sizeof(bool));
+		if (!map->visited[i])
+			return (ft_printf("Memory allocation error!\n"), 0);
+		ft_memset(map->visited[i], 0, map->cols * sizeof(bool));
+		i++;
+	}
 
-	for (int i = 0; i < map->rows; i++)
-		for (int j = 0; j < map->cols; j++)
-			map->visited[i][j] = false;
+	map->exit_found = (bool *)malloc(sizeof(bool));
+	if (!map->exit_found)
+		return (ft_printf("Memory allocation error!\n"), 0);
+	*map->exit_found = false;
 
-	map->exit_found = false;
 	x = map->player_x;
 	y = map->player_y;
-
+	ft_printf("error here:%d\n", y);
 	dfs(map, x, y);
-
 	if (map->coll > 0)
 		return (ft_printf("Error: Not all collectibles are reachable!\n"), 0);
 
-	if (!map->exit_found)
+	if (*map->exit_found == false)
 		return (ft_printf("Error: The exit is not reachable!\n"), 0);
-
-	for (int i = 0; i < map->rows; i++)
+	while (i >= 0)
+	{
 		free(map->visited[i]);
+		i--;
+	}
 	free(map->visited);
-
 	return (1);
 }
 
@@ -92,7 +104,7 @@ int	map_check_up(int fd)
 		return (0);
 	if (!check_up_first_last(&map, 1))
 		return (free(map.line), 0);
-	map.first_len = ft_strlen(map.line);
+	map.cols = ft_strlen(map.line);
 	if (!check_all_line(fd, &map))
 		return (free(map.last_line), free(map.line), 0);
 	if (map.coll < 1 || map.exit != 1 || map.pos != 1)
