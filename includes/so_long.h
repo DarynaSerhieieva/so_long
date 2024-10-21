@@ -3,19 +3,35 @@
 # define SO_LONG_H
 
 # include <fcntl.h>
+# include <stdbool.h>
 
 typedef struct s_map
 {
 	char	*line;
 	char	*last_line;
 	char	*map;
-	char	*start;
 	int		pos;
 	int		exit;
 	int		coll;
 	int		first_len;
 	int		current_len;
+	int		cols;
+	int		rows;
+	int		player_x;
+	int		player_y;
 }	t_map;
+typedef struct s_way
+{
+	char	**grid;
+	bool	**visited;
+	bool	*exit_found;
+	int		*collectibles;
+	int		x;
+	int		y;
+	int		rows;
+	int		cols;
+}	t_way;
+
 
 typedef struct s_list
 {
@@ -26,8 +42,7 @@ typedef struct s_list
 int	map_generator(const char *map);
 int	main(int argc, char **argv);
 int	is_rectangular(t_map *map);
-int	count_char(t_map *map, char c);
-// int	map_clone(t_map *map);
-// int	check_each_char(char *line, int len);
+int	check_each_char(t_map *map);
+int	map_clone(t_map *map);
 
 #endif

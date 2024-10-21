@@ -1,38 +1,31 @@
 #include <libft.h>
 #include <so_long.h>
 
-/*int	check_each_char(char *line, int len)
+int	check_each_char(t_map *map)
 {
 	int	i;
 
 	i = 0;
-	while (line[i] != '\0' && len - 1 > i)
+	while (i < map->current_len - 1)
 	{
-		if (line[i] != '1' || line[i] != '0' || \
-			line[i] != 'C' || line[i] != 'P' || line[i] != 'E')
+		if (map->line[i] != '1' && map->line[i] != '0' && \
+			map->line[i] != 'C' && map->line[i] != 'P' && map->line[i] != 'E')
+			return (ft_printf("Error wrong character %c\n", map->line[i]), 0);
+		if (map->line[i] == 'C')
+			map->coll++;
+		else if (map->line[i] == 'E')
+			map->exit++;
+		else if (map->line[i] == 'P')
 		{
-			ft_printf("The character is not correct: %c", line[i]);
-			return (0);
+			map->player_x = i;
+			map->player_y = map->rows;
+			map->pos++;
 		}
+		if (!map->player_x || !map->player_y)
+			return (ft_printf("Error: Player position not found!\n"), 0);
 		i++;
 	}
 	return (1);
-}*/
-
-int	count_char(t_map *map, char c)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (map->line[i] != '\0')
-	{
-		if (map->line[i] == c)
-			j++;
-		i++;
-	}
-	return (j);
 }
 
 int	is_rectangular(t_map *map)
@@ -50,23 +43,23 @@ int	is_rectangular(t_map *map)
 	return (ft_printf("The map is not rectangular!\n"), 0);
 }
 
-// int	map_clone(t_map *map)
-// {
-// 	if (map->map)
-// 	{
-// 		map->map_clone = ft_strdup(map->map);
-// 		if (!map->map_clone)
-// 			return (0);
-// 		free(map->map);
-// 	}
-// 	if (map->map_clone)
-// 	{
-// 		map->map = ft_strjoin(map->map_clone, map->line);
-// 		if (!map->map)
-// 			return (0);
-// 		free(map->map_clone);
-// 	}
-// 	else
-// 		map->map = ft_strdup(map->line);
-// 	return (1);
-// }
+int	map_clone(t_map *map)
+{
+	char	*temp;
+
+	if (!map->map)
+	{
+		map->map = ft_strdup(map->line);
+		if (!map->map)
+			return (0);
+	}
+	else
+	{
+		temp = map->map;
+		map->map = ft_strjoin(temp, map->line);
+		free(temp);
+		if (!map->map)
+			return (0);
+	}
+	return (1);
+}
