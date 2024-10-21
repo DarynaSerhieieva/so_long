@@ -63,3 +63,19 @@ int	map_clone(t_map *map)
 	}
 	return (1);
 }
+
+void	dfs(t_map *map, int x, int y)
+{
+	if (x < 0 || y < 0 || x >= map->rows || y >= map->cols || \
+	map->map[x * map->cols + y] == '1' || map->visited[x][y])
+		return ;
+	map->visited[x][y] = true;
+	if (map->map[x * map->cols + y] == 'C')
+		map->coll--;
+	if (map->map[x * map->cols + y] == 'E')
+		map->exit_found = true;
+	dfs(map, x - 1, y);
+	dfs(map, x + 1, y);
+	dfs(map, x, y - 1);
+	dfs(map, x, y + 1);
+}

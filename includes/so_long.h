@@ -19,19 +19,9 @@ typedef struct s_map
 	int		rows;
 	int		player_x;
 	int		player_y;
-}	t_map;
-typedef struct s_way
-{
-	char	**grid;
 	bool	**visited;
 	bool	*exit_found;
-	int		*collectibles;
-	int		x;
-	int		y;
-	int		rows;
-	int		cols;
-}	t_way;
-
+}	t_map;
 
 typedef struct s_list
 {
@@ -44,5 +34,6 @@ int	main(int argc, char **argv);
 int	is_rectangular(t_map *map);
 int	check_each_char(t_map *map);
 int	map_clone(t_map *map);
+void	dfs(t_map *map, int x, int y)
 
 #endif

@@ -3,8 +3,32 @@
 
 int	find_a_way(t_map *map)
 {
-	map->cols = map->first_len - 1;
-	printf("amount of cols and rows, %d, %d\n", map->player_x, map->player_y);
+	int	x;
+	int	y;
+	map->visited = (bool **)malloc(map->rows * sizeof(bool *));
+	for (int i = 0; i < map->rows; i++)
+		map->visited[i] = (bool *)malloc(map->cols * sizeof(bool));
+
+	for (int i = 0; i < map->rows; i++)
+		for (int j = 0; j < map->cols; j++)
+			map->visited[i][j] = false;
+
+	map->exit_found = false;
+	x = map->player_x;
+	y = map->player_y;
+
+	dfs(map, x, y);
+
+	if (map->coll > 0)
+		return (ft_printf("Error: Not all collectibles are reachable!\n"), 0);
+
+	if (!map->exit_found)
+		return (ft_printf("Error: The exit is not reachable!\n"), 0);
+
+	for (int i = 0; i < map->rows; i++)
+		free(map->visited[i]);
+	free(map->visited);
+
 	return (1);
 }
 
@@ -71,12 +95,8 @@ int	map_check_up(int fd)
 	map.first_len = ft_strlen(map.line);
 	if (!check_all_line(fd, &map))
 		return (free(map.last_line), free(map.line), 0);
-	if (map.coll < 1)
-		return (ft_printf("Error, collectible!The map has:%d\n", map.coll), 0);
-	if (map.exit != 1)
-		return (ft_printf("Error, exit! The map has:%d\n", map.exit), 0);
-	if (map.pos != 1)
-		return (ft_printf("Error, position! The map has:%d\n", map.pos), 0);
+	if (map.coll < 1 || map.exit != 1 || map.pos != 1)
+		return (ft_printf("Error: exit/ position or collectible\n"), 0);
 	if (!check_up_first_last(&map, 0))
 		return (free(map.last_line), free(map.line), free(map.map), 0);
 	free(map.line);
