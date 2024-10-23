@@ -19,42 +19,32 @@ int	set_visited(t_map *map)
 	return (1);
 }
 
-int	check_each_char(t_map *map)
+int	check_up_first_last(char *line)
 {
 	int	i;
 
 	i = 0;
-	while (i < map->current_len - 1)
+	while (line[i] != '\0')
 	{
-		if (map->line[i] != '1' && map->line[i] != '0' && \
-			map->line[i] != 'C' && map->line[i] != 'P' && map->line[i] != 'E')
-			return (ft_printf("Error wrong character %c\n", map->line[i]), 0);
-		if (map->line[i] == 'C')
-			map->coll++;
-		else if (map->line[i] == 'E')
-			map->exit++;
-		else if (map->line[i] == 'P')
+		if (line[i] != '1' && line[i] != '\n')
 		{
-			map->player_x = map->rows;
-			map->player_y = i;
-			map->pos++;
-			if (!map->player_x || !map->player_y)
-				return (ft_printf("Error: Player position not found!\n"), 0);
+			ft_printf("All line must contain only: 1\n");
+			return (0);
 		}
 		i++;
 	}
 	return (1);
 }
 
-int	is_rectangular(t_map *map)
+int	is_rectangular(t_map *map, int current_len)
 {
-	int	len;
-
-	len = map->current_len;
-	if (map->line[len - 1] != '\n')
-		len++;
-	if (map->cols != len)
-		return (ft_printf("The map is not rectangular!\n"), 0);
+	if (map->line[current_len - 1] != '\n')
+		current_len++;
+	if (map->cols != current_len)
+	{
+		ft_printf("The map is not rectangular!\n");
+		return (0);
+	}
 	return (1);
 }
 
@@ -81,7 +71,7 @@ int	map_clone(t_map *map)
 
 void	dfs(t_map *map, int x, int y)
 {
-	if (map->coll == 0 && *map->exit_found)
+	if (map->collectible == 0 && *map->exit_found)
 		return ;
 	if (x < 0 || y < 0 || x >= map->rows || y >= map->cols)
 		return ;
@@ -89,7 +79,7 @@ void	dfs(t_map *map, int x, int y)
 		return ;
 	map->visited[x][y] = true;
 	if (map->map[x * map->cols + y] == 'C')
-		map->coll--;
+		map->collectible--;
 	if (map->map[x * map->cols + y] == 'E')
 		*map->exit_found = true;
 	dfs(map, x - 1, y);

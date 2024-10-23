@@ -8,12 +8,10 @@
 typedef struct s_map
 {
 	char	*line;
-	char	*last_line;
 	char	*map;
-	int		pos;
+	int		position;
 	int		exit;
-	int		coll;
-	int		current_len;
+	int		collectible;
 	int		cols;
 	int		rows;
 	int		player_x;
@@ -26,14 +24,22 @@ typedef struct s_list
 {
 	void	*mlx;
 	void	*win;
+	int		w;
+	int		h;
+	void	*player;
+	void	*wall;
+	void	*collectible;
+	void	*exit;
+	void	*empty;
 }				t_list;
 
-int	map_generator(const char *map);
-int	main(int argc, char **argv);
-int	is_rectangular(t_map *map);
-int	check_each_char(t_map *map);
-int	map_clone(t_map *map);
-int	set_visited(t_map *map);
+// map_generator
+t_map	map_generator(const char *link);
+int		main(int argc, char **argv);
+int		is_rectangular(t_map *map, int current_len);
+int		map_clone(t_map *map);
+int		set_visited(t_map *map);
+int		check_up_first_last(char *line);
 void	dfs(t_map *map, int x, int y);
 
 #endif
