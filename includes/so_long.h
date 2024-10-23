@@ -33,6 +33,7 @@ int	main(int argc, char **argv);
 int	is_rectangular(t_map *map);
 int	check_each_char(t_map *map);
 int	map_clone(t_map *map);
+int	set_visited(t_map *map);
 void	dfs(t_map *map, int x, int y);
 
 #endif

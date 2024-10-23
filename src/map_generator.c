@@ -3,43 +3,26 @@
 
 int	find_a_way(t_map *map)
 {
-	int	x;
-	int	y;
-	int	i;
+	int		x;
+	int		y;
+	int		i;
+	bool	exit_found;
 
-	i = 0;
-	map->visited = (bool **)malloc(map->rows * sizeof(bool *));
-	if (!map->visited)
-		return (ft_printf("Memory allocation error!\n"), 0);
-
-	while (i < map->rows)
-	{
-		map->visited[i] = (bool *)malloc(map->cols * sizeof(bool));
-		if (!map->visited[i])
-			return (ft_printf("Memory allocation error!\n"), 0);
-		ft_memset(map->visited[i], 0, map->cols * sizeof(bool));
-		i++;
-	}
-
-	map->exit_found = (bool *)malloc(sizeof(bool));
-	if (!map->exit_found)
-		return (ft_printf("Memory allocation error!\n"), 0);
-	*map->exit_found = false;
+	if (set_visited(map))
+		return (0);
+	exit_found = false;
+	map->exit_found = &exit_found;
 
 	x = map->player_x;
 	y = map->player_y;
-	ft_printf("error here:%d\n", y);
+	i = map->cols;
 	dfs(map, x, y);
 	if (map->coll > 0)
 		return (ft_printf("Error: Not all collectibles are reachable!\n"), 0);
-
 	if (*map->exit_found == false)
 		return (ft_printf("Error: The exit is not reachable!\n"), 0);
-	while (i >= 0)
-	{
-		free(map->visited[i]);
-		i--;
-	}
+	while (i > 0)
+		free(map->visited[--i]);
 	free(map->visited);
 	return (1);
 }
@@ -51,16 +34,14 @@ int	check_up_first_last(t_map *map, int ind)
 
 	i = 0;
 	if (ind)
-		line = map->line;
+		line = map->line - 1;
 	else
-		line = map->last_line - 1;
-	i = ft_strlen(line);
-	while (line[i] != '\0' && i >= 0)
+		line = map->last_line;
+	while (line[i] != '\0')
 	{
-		if (line[i] == '1')
-			i--;
-		else
+		if (line[i] != '1')
 			return (ft_printf("The map does not have walls\n"), 0);
+		i++;
 	}
 	return (1);
 }
@@ -92,40 +73,46 @@ int	check_all_line(int fd, t_map *map)
 	return (1);
 }
 
-int	map_check_up(int fd)
+int	map_check_up(int fd, t_map *map)
 {
-	t_map		map;
-
-	map.coll = 0;
-	map.exit = 0;
-	map.pos = 0;
-	map.line = get_next_line(fd);
-	if (!map.line)
+	map->line = get_next_line(fd);
+	if (!map->line)
 		return (0);
-	if (!check_up_first_last(&map, 1))
-		return (free(map.line), 0);
-	map.cols = ft_strlen(map.line);
-	if (!check_all_line(fd, &map))
-		return (free(map.last_line), free(map.line), 0);
-	if (map.coll < 1 || map.exit != 1 || map.pos != 1)
-		return (ft_printf("Error: exit/ position or collectible\n"), 0);
-	if (!check_up_first_last(&map, 0))
-		return (free(map.last_line), free(map.line), free(map.map), 0);
-	free(map.line);
-	free(map.last_line);
-	find_a_way(&map);
+	if (!check_up_first_last(map, 1))
+		return (0);
+	map->cols = ft_strlen(map->line);
+	if (!check_all_line(fd, map))
+		return (0);
+	if (map->coll < 1 || map->exit != 1 || map->pos != 1)
+		return (ft_printf("Error: exit/position or collectible\n"), 0);
+	if (!check_up_first_last(map, 0))
+		return (0);
+	if (find_a_way(map))
+		return (0);
 	return (1);
 }
 
 int	map_generator(const char *link)
 {
-	int	fd;
+	int			fd;
+	t_map		map;
+
+	map.coll = 0;
+	map.exit = 0;
+	map.pos = 0;
+	map.map = NULL;
 
 	fd = open(link, O_RDONLY);
 	if (fd == -1)
 		return (ft_printf("Error opening file\n"), 0);
-	if (!map_check_up(fd))
-		return (close(fd), 0);
+	if (!map_check_up(fd, &map))
+	{
+		free(map.last_line);
+		free(map.line);
+		free(map.map);
+		close(fd);
+		return (0);
+	}
 	close(fd);
 	return (1);
 }
