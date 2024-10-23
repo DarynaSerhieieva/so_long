@@ -92,7 +92,6 @@ void	dfs(t_map *map, int x, int y)
 		map->coll--;
 	if (map->map[x * map->cols + y] == 'E')
 		*map->exit_found = true;
-	ft_printf("one more time: %d, %d \n", map->coll, *map->exit_found);
 	dfs(map, x - 1, y);
 	dfs(map, x + 1, y);
 	dfs(map, x, y - 1);

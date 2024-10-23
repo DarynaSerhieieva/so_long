@@ -8,21 +8,20 @@ int	find_a_way(t_map *map)
 	int		i;
 	bool	exit_found;
 
-	if (set_visited(map))
+	if (!set_visited(map))
 		return (0);
 	exit_found = false;
 	map->exit_found = &exit_found;
-
 	x = map->player_x;
 	y = map->player_y;
-	i = map->cols;
+	i = 0;
 	dfs(map, x, y);
 	if (map->coll > 0)
 		return (ft_printf("Error: Not all collectibles are reachable!\n"), 0);
 	if (*map->exit_found == false)
 		return (ft_printf("Error: The exit is not reachable!\n"), 0);
-	while (i > 0)
-		free(map->visited[--i]);
+	while (i > map->cols)
+		free(map->visited[i++]);
 	free(map->visited);
 	return (1);
 }
@@ -87,7 +86,7 @@ int	map_check_up(int fd, t_map *map)
 		return (ft_printf("Error: exit/position or collectible\n"), 0);
 	if (!check_up_first_last(map, 0))
 		return (0);
-	if (find_a_way(map))
+	if (!find_a_way(map))
 		return (0);
 	return (1);
 }
@@ -113,6 +112,9 @@ int	map_generator(const char *link)
 		close(fd);
 		return (0);
 	}
+	free(map.last_line);
+	free(map.line);
+	free(map.map);
 	close(fd);
 	return (1);
 }
