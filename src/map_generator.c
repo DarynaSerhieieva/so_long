@@ -45,8 +45,6 @@ int	check_each_char(t_map *map)
 			map->player_x = map->rows;
 			map->player_y = i;
 			map->position++;
-			if (!map->player_x || !map->player_y)
-				return (ft_printf("Error: Player position not found!\n"), 0);
 		}
 		i++;
 	}
@@ -67,14 +65,13 @@ int	check_all_line(int fd, t_map *map)
 		if (!map->line)
 		{
 			map->line = tmp;
+			map->rows++;
 			break ;
 		}
 		map->rows++;
 		free(tmp);
-		if (!is_rectangular(map, ft_strlen(map->line)))
+		if (!is_rectangular_walls(map, ft_strlen(map->line)))
 			return (0);
-		if (map->line[0] != '1' || map->line[map->cols - 2] != '1')
-			return (ft_printf("The map is not enclosed in walls !\n"), 0);
 		if (!check_each_char(map))
 			return (0);
 	}

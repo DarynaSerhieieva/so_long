@@ -36,10 +36,9 @@ typedef struct s_list
 }				t_list;
 
 // map_generator
-// t_map	map_generator(const char *link);
-int	map_generator(const char *link, t_map *map);
+int		map_generator(const char *link, t_map *map);
 int		main(int argc, char **argv);
-int		is_rectangular(t_map *map, int current_len);
+int		is_rectangular_walls(t_map *map, int current_len);
 int		map_clone(t_map *map);
 int		set_visited(t_map *map);
 int		check_up_first_last(char *line);

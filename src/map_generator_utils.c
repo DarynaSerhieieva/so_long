@@ -36,7 +36,7 @@ int	check_up_first_last(char *line)
 	return (1);
 }
 
-int	is_rectangular(t_map *map, int current_len)
+int	is_rectangular_walls(t_map *map, int current_len)
 {
 	if (map->line[current_len - 1] != '\n')
 		current_len++;
@@ -45,29 +45,13 @@ int	is_rectangular(t_map *map, int current_len)
 		ft_printf("The map is not rectangular!\n");
 		return (0);
 	}
+	if (map->line[0] != '1' || map->line[map->cols - 2] != '1')
+	{
+		ft_printf("The map is not enclosed in walls !\n");
+		return (0);
+	}
 	return (1);
 }
-
-// int	map_clone(t_map *map)
-// {
-// 	char	*temp;
-
-// 	if (!map->map)
-// 	{
-// 		map->map = ft_strdup(map->line);
-// 		if (!map->map)
-// 			return (0);
-// 	}
-// 	else
-// 	{
-// 		temp = map->map;
-// 		map->map = ft_strjoin(temp, map->line);
-// 		free(temp);
-// 		if (!map->map)
-// 			return (0);
-// 	}
-// 	return (1);
-// }
 
 int	map_clone(t_map *map)
 {
