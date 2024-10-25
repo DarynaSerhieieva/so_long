@@ -69,6 +69,7 @@ int	check_all_line(int fd, t_map *map)
 			map->line = tmp;
 			break ;
 		}
+		map->rows++;
 		free(tmp);
 		if (!is_rectangular(map, ft_strlen(map->line)))
 			return (0);
@@ -76,7 +77,6 @@ int	check_all_line(int fd, t_map *map)
 			return (ft_printf("The map is not enclosed in walls !\n"), 0);
 		if (!check_each_char(map))
 			return (0);
-		map->rows++;
 	}
 	return (1);
 }
@@ -103,25 +103,26 @@ int	map_check_up(int fd, t_map *map)
 int	map_generator(const char *link, t_map *map)
 {
 	int			fd;
+	bool		valid;
+	int			i;
 
-	map->collectible = 0;
-	map->exit = 0;
-	map->position = 0;
 	map->map = NULL;
-
+	valid = false;
+	map->valid = &valid;
+	i = 0;
 	fd = open(link, O_RDONLY);
 	if (fd == -1)
-	{
-		ft_printf("Error opening file\n");
-		return (0);
-	}
+		return (ft_printf("Error opening file\n"), 0);
 	if (!map_check_up(fd, map))
 	{
 		free(map->line);
+		while (i < map->rows)
+			free(map->map[i++]);
 		free(map->map);
 		close(fd);
 		return (0);
 	}
+	*map->valid = true;
 	free(map->line);
 	close(fd);
 	return (1);

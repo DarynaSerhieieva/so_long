@@ -8,7 +8,7 @@
 typedef struct s_map
 {
 	char	*line;
-	char	*map;
+	char	**map;
 	int		position;
 	int		exit;
 	int		collectible;
@@ -18,6 +18,7 @@ typedef struct s_map
 	int		player_y;
 	bool	**visited;
 	bool	*exit_found;
+	bool	*valid;
 }	t_map;
 
 typedef struct s_list

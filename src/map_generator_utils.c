@@ -48,24 +48,49 @@ int	is_rectangular(t_map *map, int current_len)
 	return (1);
 }
 
+// int	map_clone(t_map *map)
+// {
+// 	char	*temp;
+
+// 	if (!map->map)
+// 	{
+// 		map->map = ft_strdup(map->line);
+// 		if (!map->map)
+// 			return (0);
+// 	}
+// 	else
+// 	{
+// 		temp = map->map;
+// 		map->map = ft_strjoin(temp, map->line);
+// 		free(temp);
+// 		if (!map->map)
+// 			return (0);
+// 	}
+// 	return (1);
+// }
+
 int	map_clone(t_map *map)
 {
-	char	*temp;
+	char	**new_map;
 
 	if (!map->map)
 	{
-		map->map = ft_strdup(map->line);
+		map->map = (char **)malloc((map->rows + 1) * sizeof(char *));
 		if (!map->map)
-			return (0);
+			return (ft_printf("Memory allocation error!\n"), 0);
 	}
 	else
 	{
-		temp = map->map;
-		map->map = ft_strjoin(temp, map->line);
-		free(temp);
-		if (!map->map)
-			return (0);
+		new_map = (char **)malloc((map->rows + 1) * sizeof(char *));
+		if (!new_map)
+			return (ft_printf("Memory allocation error!\n"), 0);
+		ft_memcpy(new_map, map->map, map->rows * sizeof(char *));
+		free(map->map);
+		map->map = new_map;
 	}
+	map->map[map->rows] = ft_strdup(map->line);
+	if (!map->map[map->rows])
+		return (ft_printf("Memory allocation error!\n"), 0);
 	return (1);
 }
 
@@ -75,12 +100,12 @@ void	dfs(t_map *map, int x, int y)
 		return ;
 	if (x < 0 || y < 0 || x >= map->rows || y >= map->cols)
 		return ;
-	if (map->map[x * map->cols + y] == '1' || map->visited[x][y])
+	if (map->map[x][y] == '1' || map->visited[x][y])
 		return ;
 	map->visited[x][y] = true;
-	if (map->map[x * map->cols + y] == 'C')
+	if (map->map[x][y] == 'C')
 		map->collectible--;
-	if (map->map[x * map->cols + y] == 'E')
+	if (map->map[x][y] == 'E')
 		*map->exit_found = true;
 	dfs(map, x - 1, y);
 	dfs(map, x + 1, y);
