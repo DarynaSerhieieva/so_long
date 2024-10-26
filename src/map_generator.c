@@ -3,8 +3,10 @@
 
 int	find_a_way(t_map *map)
 {
+	int		collectible;
 	bool	exit_found;
 
+	collectible = map->collectible;
 	if (!set_visited(map))
 		return (0);
 	exit_found = false;
@@ -15,6 +17,7 @@ int	find_a_way(t_map *map)
 	if (*map->exit_found == false)
 		return (ft_printf("Error: The exit is not reachable!\n"), 0);
 	ft_free_matrix((void **)map->visited, map->rows);
+	map->collectible = collectible;
 	return (1);
 }
 

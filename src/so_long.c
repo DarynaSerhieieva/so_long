@@ -1,59 +1,79 @@
-#include <../mlx_linux/mlx.h>
 #include <libft.h>
 #include <so_long.h>
 
-void	draw_map(t_map *map, t_list *mlx)
+// void	draw_map(t_map *map, t_list *mlx)
+// {
+// 	int		x;
+// 	int		y;
+// 	char	current;
+
+// 	x = 0;
+// 	while (x < map->rows)
+// 	{
+// 		y = 0;
+// 		while (y < map->cols - 1)
+// 		{
+// 			current = map->map[x][y];
+// 			if (current == '1')
+// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->wall, y * SIZE_IMG, x * SIZE_IMG);
+// 			else if (current == 'P')
+// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->player, y * SIZE_IMG, x * SIZE_IMG);
+// 			else if (current == 'C')
+// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->coll, y * SIZE_IMG, x * SIZE_IMG);
+// 			else if (current == 'E')
+// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->exit, y * SIZE_IMG, x * SIZE_IMG);
+// 			else
+// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->grass, y * SIZE_IMG, x * SIZE_IMG);
+// 			y++;
+// 		}
+// 		x++;
+// 	}
+// }
+
+void	draw_map(t_data *data)
 {
 	int		x;
 	int		y;
 	char	current;
 
 	x = 0;
-	while (x < map->rows)
+	while (x < data->map->rows)
 	{
 		y = 0;
-		while (y < map->cols - 1)
+		while (y < data->map->cols - 1)
 		{
-			current = map->map[x][y];
+			current = data->map->map[x][y];
 			if (current == '1')
-				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->wall, y * mlx->h, x * mlx->w);
-			else if (current == 'P')
-				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->player, y * mlx->h, x * mlx->w);
+				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->wall, y * SIZE_IMG, x * SIZE_IMG);
+			else if (current == 'P'){
+				ft_printf("x = %d, y = %d\n", x , y);
+				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->player, y * SIZE_IMG, x * SIZE_IMG);
+			}
+				
 			else if (current == 'C')
-				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->coll, y * mlx->h, x * mlx->w);
+				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->coll, y * SIZE_IMG, x * SIZE_IMG);
 			else if (current == 'E')
-				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->exit, y * mlx->h, x * mlx->w);
+				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->exit, y * SIZE_IMG, x * SIZE_IMG);
 			else
-				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->grass, y * mlx->h, x * mlx->w);
+				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->grass, y * SIZE_IMG, x * SIZE_IMG);
 			y++;
 		}
 		x++;
 	}
 }
 
-int	ft_close_window(t_list *mlx)
-{
-	ft_free_matrix((void **)mlx->map, mlx->size);
-	mlx_destroy_window(mlx->mlx, mlx->win);
-	exit (0);
-}
-
-int	handle_key(int keycode, t_list *mlx)
+int	handle_key(int keycode, t_data *data)
 {
 	if (keycode == 65307)
-	{
-		ft_close_window(mlx);
-	}
-		
-	// else if (keycode == 'W' || keycode == 119) // W key
-	//     move_up();
-	// else if (keycode == 'S' || keycode == 115) // S key
-	//     move_down();
-	// else if (keycode == 'A' || keycode == 97)  // A key
-	//     move_left();
-	// else if (keycode == 'D' || keycode == 100) // D key
-	//     move_right();
-
+		ft_close_window(data);
+	else if (keycode == 'W' || keycode == 119)
+		ft_move_player(data, data->map->player_x - 1, data->map->player_y);
+	else if (keycode == 'S' || keycode == 115)
+		ft_move_player(data, data->map->player_x + 1, data->map->player_y);
+	else if (keycode == 'A' || keycode == 97)
+		ft_move_player(data, data->map->player_x, data->map->player_y - 1);
+	else if (keycode == 'D' || keycode == 100)
+		ft_move_player(data, data->map->player_x, data->map->player_y + 1);
 	return (0);
 }
 
@@ -61,6 +81,7 @@ int	main(int argc, char **argv)
 {
 	t_map	map;
 	t_list	mlx;
+	t_data	data;
 
 	map.collectible = 0;
 	map.exit = 0;
@@ -71,19 +92,14 @@ int	main(int argc, char **argv)
 	map_generator(argv[1], &map);
 	if (!*map.valid)
 		return (1);
-	mlx.map = map.map;
-	mlx.size = map.rows;
-	mlx.w = 50;
-	mlx.h = 50;
+	data.map = &map;
+	data.mlx = &mlx;
 	mlx.mlx = mlx_init();
-    mlx.win = mlx_new_window(mlx.mlx, (map.cols - 1 ) * SIZE_IMG, map.rows * SIZE_IMG, "So_long");
-	mlx.player = mlx_xpm_file_to_image(mlx.mlx, "./img/snail.xpm", &mlx.w, &mlx.h);
-	mlx.wall = mlx_xpm_file_to_image(mlx.mlx, "./img/stone.xpm", &mlx.w, &mlx.h);
-	mlx.coll = mlx_xpm_file_to_image(mlx.mlx, "./img/flower.xpm", &mlx.w, &mlx.h);
-	mlx.exit = mlx_xpm_file_to_image(mlx.mlx, "./img/home.xpm", &mlx.w, &mlx.h);
-	mlx.grass = mlx_xpm_file_to_image(mlx.mlx, "./img/grass.xpm", &mlx.w, &mlx.h);
-	draw_map(&map, &mlx);
-	mlx_key_hook(mlx.win, handle_key, &mlx);
-	mlx_hook(mlx.win, 17, 0, ft_close_window, &mlx); 
+	mlx.win = mlx_new_window(mlx.mlx, \
+	(map.cols - 1) * SIZE_IMG, map.rows * SIZE_IMG, "So_long");
+	render_img(&data);
+	draw_map(&data);
+	mlx_key_hook(mlx.win, handle_key, &data);
+	mlx_hook(mlx.win, 17, 0, ft_close_window, &data);
 	mlx_loop(mlx.mlx);
 }

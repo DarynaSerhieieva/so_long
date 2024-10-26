@@ -12,7 +12,8 @@ MLX_PATH = /usr/include
 MLX_INC = -I$(MLX_PATH)
 
 # Source files and object files
-SRC_FILES	= so_long map_generator map_generator_utils ft_utils
+SRC_FILES	= so_long map_generator map_generator_utils \
+			ft_utils ft_move_actions
 SRC = $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJ = $(SRC:.c=.o)
 
