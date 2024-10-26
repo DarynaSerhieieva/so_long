@@ -3,25 +3,18 @@
 
 int	find_a_way(t_map *map)
 {
-	int		i;
 	bool	exit_found;
 
 	if (!set_visited(map))
 		return (0);
 	exit_found = false;
 	map->exit_found = &exit_found;
-	i = 0;
 	dfs(map, map->player_x, map->player_y);
 	if (map->collectible > 0)
 		return (ft_printf("Error: Not all collectibles are reachable!\n"), 0);
 	if (*map->exit_found == false)
 		return (ft_printf("Error: The exit is not reachable!\n"), 0);
-	while (i > map->rows)
-	{
-		free(map->visited[i]);
-		i++;
-	}
-	free(map->visited);
+	ft_free_matrix((void **)map->visited, map->rows);
 	return (1);
 }
 
@@ -101,21 +94,17 @@ int	map_generator(const char *link, t_map *map)
 {
 	int			fd;
 	bool		valid;
-	int			i;
 
 	map->map = NULL;
 	valid = false;
 	map->valid = &valid;
-	i = 0;
 	fd = open(link, O_RDONLY);
 	if (fd == -1)
 		return (ft_printf("Error opening file\n"), 0);
 	if (!map_check_up(fd, map))
 	{
 		free(map->line);
-		while (i < map->rows)
-			free(map->map[i++]);
-		free(map->map);
+		ft_free_matrix((void *)map->map, map->rows);
 		close(fd);
 		return (0);
 	}
