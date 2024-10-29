@@ -90,7 +90,10 @@ void	dfs(t_map *map, int x, int y)
 	if (map->map[x][y] == 'C')
 		map->collectible--;
 	if (map->map[x][y] == 'E')
+	{
 		*map->exit_found = true;
+		return ;
+	}
 	dfs(map, x - 1, y);
 	dfs(map, x + 1, y);
 	dfs(map, x, y - 1);

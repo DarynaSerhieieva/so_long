@@ -1,35 +1,6 @@
 #include <libft.h>
 #include <so_long.h>
 
-// void	draw_map(t_map *map, t_list *mlx)
-// {
-// 	int		x;
-// 	int		y;
-// 	char	current;
-
-// 	x = 0;
-// 	while (x < map->rows)
-// 	{
-// 		y = 0;
-// 		while (y < map->cols - 1)
-// 		{
-// 			current = map->map[x][y];
-// 			if (current == '1')
-// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->wall, y * SIZE_IMG, x * SIZE_IMG);
-// 			else if (current == 'P')
-// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->player, y * SIZE_IMG, x * SIZE_IMG);
-// 			else if (current == 'C')
-// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->coll, y * SIZE_IMG, x * SIZE_IMG);
-// 			else if (current == 'E')
-// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->exit, y * SIZE_IMG, x * SIZE_IMG);
-// 			else
-// 				mlx_put_image_to_window(mlx->mlx, mlx->win, mlx->grass, y * SIZE_IMG, x * SIZE_IMG);
-// 			y++;
-// 		}
-// 		x++;
-// 	}
-// }
-
 void	draw_map(t_data *data)
 {
 	int		x;
@@ -44,18 +15,15 @@ void	draw_map(t_data *data)
 		{
 			current = data->map->map[x][y];
 			if (current == '1')
-				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->wall, y * SIZE_IMG, x * SIZE_IMG);
-			else if (current == 'P'){
-				ft_printf("x = %d, y = %d\n", x , y);
-				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->player, y * SIZE_IMG, x * SIZE_IMG);
-			}
-				
+				mlx_img(data, data->mlx->wall, x * SIZE_IMG, y * SIZE_IMG);
+			else if (current == 'P')
+				mlx_img(data, data->mlx->player, x * SIZE_IMG, y * SIZE_IMG);
 			else if (current == 'C')
-				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->coll, y * SIZE_IMG, x * SIZE_IMG);
+				mlx_img(data, data->mlx->coll, x * SIZE_IMG, y * SIZE_IMG);
 			else if (current == 'E')
-				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->exit, y * SIZE_IMG, x * SIZE_IMG);
+				mlx_img(data, data->mlx->exit, x * SIZE_IMG, y * SIZE_IMG);
 			else
-				mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, data->mlx->grass, y * SIZE_IMG, x * SIZE_IMG);
+				mlx_img(data, data->mlx->grass, x * SIZE_IMG, y * SIZE_IMG);
 			y++;
 		}
 		x++;
@@ -87,6 +55,7 @@ int	main(int argc, char **argv)
 	map.exit = 0;
 	map.position = 0;
 	map.rows = 0;
+	data.move_count = 0;
 	if (argc != 2)
 		return (0);
 	map_generator(argv[1], &map);

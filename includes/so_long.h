@@ -7,7 +7,7 @@
 # include <../mlx_linux/mlx.h>
 
 # ifndef SIZE_IMG
-#  define SIZE_IMG 50
+#  define SIZE_IMG 100
 # endif
 
 typedef struct s_map
@@ -42,6 +42,7 @@ typedef struct s_data
 {
 	t_map	*map;
 	t_list	*mlx;
+	int		move_count;
 }	t_data;
 // so_long
 int		main(int argc, char **argv);
@@ -67,6 +68,7 @@ int		map_clone(t_map *map);
 void	ft_free_matrix(void **matrix, int size);
 void	render_img(t_data *data);
 int		ft_close_window(t_data *data);
+void	mlx_img(t_data *data, void	*img, int x, int y);
 
 // ft_move_actions
 void	ft_move_player(t_data *data, int x, int y);

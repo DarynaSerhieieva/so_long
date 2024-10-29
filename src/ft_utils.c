@@ -26,13 +26,18 @@ void	render_img(t_data *data)
 	w = SIZE_IMG;
 	h = SIZE_IMG;
 	data->mlx->player = mlx_xpm_file_to_image(data->mlx->mlx, \
-	"./img/snail.xpm", &w, &h);
+	"./img_100/snail.xpm", &w, &h);
 	data->mlx->wall = mlx_xpm_file_to_image(data->mlx->mlx, \
-	"./img/stone.xpm", &w, &h);
+	"./img_100/stone.xpm", &w, &h);
 	data->mlx->coll = mlx_xpm_file_to_image(data->mlx->mlx, \
-	"./img/flower.xpm", &w, &h);
+	"./img_100/flower.xpm", &w, &h);
 	data->mlx->exit = mlx_xpm_file_to_image(data->mlx->mlx, \
-	"./img/home.xpm", &w, &h);
+	"./img_100/home.xpm", &w, &h);
 	data->mlx->grass = mlx_xpm_file_to_image(data->mlx->mlx, \
-	"./img/grass.xpm", &w, &h);
+	"./img_100/grass.xpm", &w, &h);
+}
+
+void	mlx_img(t_data *data, void	*img, int x, int y)
+{
+	mlx_put_image_to_window(data->mlx->mlx, data->mlx->win, img, y, x);
 }
