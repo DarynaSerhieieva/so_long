@@ -18,7 +18,11 @@ SRC = $(addprefix $(SRC_DIR), $(addsuffix .c, $(SRC_FILES)))
 OBJ = $(SRC:.c=.o)
 
 # Main target
-all: $(NAME)
+all: submodule $(NAME)
+
+# Initialize submodule
+submodule:
+	git submodule update --init --recursive
 
 # To link with the required internal Linux API:
 $(NAME): $(OBJ) $(LIBFT) $(MLX)

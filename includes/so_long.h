@@ -6,7 +6,7 @@
 /*   By: dserhiei <dserhiei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 16:15:11 by dserhiei          #+#    #+#             */
-/*   Updated: 2024/10/30 16:15:12 by dserhiei         ###   ########.fr       */
+/*   Updated: 2024/10/30 16:20:36 by dserhiei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ typedef struct s_data
 int		main(int argc, char **argv);
 int		handle_key(int keycode, t_data *data);
 void	draw_map(t_data *data);
-
 
 // map_generator
 int		map_generator(const char *link, t_map *map);
